@@ -1,0 +1,9 @@
+question,expected_section,answerable
+"How many casual leaves do employees get?","Leave Policy","yes"
+"How do employees apply for leave?","Leave Policy","yes"
+"How many days can employees work from home?","Work From Home Policy","yes"
+"What should employees use for sensitive systems?","IT Security Policy","yes"
+"What benefits are provided to employees?","Employee Benefits","yes"
+"What is the company's stock market prediction?","","no"
+"Who is the company's CEO?","","no"
+"What programming language does the company use?","","no"
