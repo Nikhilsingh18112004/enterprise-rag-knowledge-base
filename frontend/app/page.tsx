@@ -120,7 +120,8 @@ export default function Home() {
                   <button
                     key={example}
                     onClick={() => setQuestion(example)}
-                    className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-600 transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
+                    disabled={loading}
+                    className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-600 transition hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {example}
                   </button>
@@ -133,16 +134,44 @@ export default function Home() {
             {/* Ask Button */}
             <button
               onClick={askQuestion}
-              disabled={loading}
-              className="mt-7 rounded-xl bg-blue-600 px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+              disabled={loading || !question.trim()}
+              className="mt-7 flex items-center gap-3 rounded-xl bg-blue-600 px-7 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-400"
             >
-              {loading ? "Searching documents..." : "Ask Question"}
+
+              {loading && (
+                <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              )}
+
+              {loading ? "Searching knowledge base..." : "Ask Question"}
+
             </button>
+
+            {/* Loading Status */}
+            {loading && (
+              <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-5">
+
+                <div className="flex items-center gap-3">
+
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-blue-600" />
+
+                  <p className="font-medium text-blue-900">
+                    Processing your question
+                  </p>
+
+                </div>
+
+                <p className="mt-2 text-sm text-blue-700">
+                  Searching documents, ranking relevant information, and
+                  generating an answer...
+                </p>
+
+              </div>
+            )}
 
           </div>
 
           {/* Answer */}
-          {answer && (
+          {answer && !loading && (
             <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
 
               <div className="flex items-center gap-3">
