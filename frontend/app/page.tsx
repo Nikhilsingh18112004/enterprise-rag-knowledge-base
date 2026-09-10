@@ -9,9 +9,15 @@ const exampleQuestions = [
   "What benefits are provided to employees?",
 ];
 
+type Source = {
+  document: string;
+  page: number;
+};
+
 export default function Home() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState<Source[]>([]);
   const [loading, setLoading] = useState(false);
 
   async function askQuestion() {
@@ -21,6 +27,7 @@ export default function Home() {
 
     setLoading(true);
     setAnswer("");
+    setSources([]);
 
     try {
       const response = await fetch("http://127.0.0.1:8000/ask", {
@@ -40,12 +47,15 @@ export default function Home() {
       const data = await response.json();
 
       setAnswer(data.answer);
+      setSources(data.sources || []);
     } catch (error) {
       console.error(error);
 
       setAnswer(
         "Unable to connect to the RAG backend. Please make sure FastAPI is running."
       );
+
+      setSources([]);
     } finally {
       setLoading(false);
     }
@@ -54,6 +64,7 @@ export default function Home() {
   function clearConversation() {
     setQuestion("");
     setAnswer("");
+    setSources([]);
   }
 
   function handleKeyDown(
@@ -207,9 +218,10 @@ export default function Home() {
           {answer && !loading && (
             <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
 
+              {/* Answer Header */}
               <div className="flex items-center gap-3">
 
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-100 text-sm font-bold text-blue-700">
                   AI
                 </div>
 
@@ -225,6 +237,7 @@ export default function Home() {
 
               </div>
 
+              {/* Answer Text */}
               <div className="mt-6 border-t border-slate-100 pt-6">
 
                 <p className="whitespace-pre-wrap leading-7 text-slate-700">
@@ -232,6 +245,62 @@ export default function Home() {
                 </p>
 
               </div>
+
+              {/* Sources */}
+              {sources.length > 0 && (
+                <div className="mt-8 border-t border-slate-100 pt-6">
+
+                  <div className="mb-4 flex items-center gap-2">
+
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-sm">
+                      📄
+                    </div>
+
+                    <div>
+                      <h4 className="font-semibold text-slate-900">
+                        Sources
+                      </h4>
+
+                      <p className="text-xs text-slate-500">
+                        Documents used to generate this answer
+                      </p>
+                    </div>
+
+                  </div>
+
+                  <div className="space-y-3">
+
+                    {sources.map((source, index) => (
+                      <div
+                        key={`${source.document}-${source.page}-${index}`}
+                        className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+                      >
+
+                        <div className="flex items-center justify-between">
+
+                          <div>
+                            <p className="font-medium text-slate-800">
+                              {source.document}
+                            </p>
+
+                            <p className="mt-1 text-sm text-slate-500">
+                              Page {source.page}
+                            </p>
+                          </div>
+
+                          <span className="rounded-full bg-white px-3 py-1 text-xs font-medium text-slate-600">
+                            Source {index + 1}
+                          </span>
+
+                        </div>
+
+                      </div>
+                    ))}
+
+                  </div>
+
+                </div>
+              )}
 
             </div>
           )}
