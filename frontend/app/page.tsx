@@ -2,6 +2,13 @@
 
 import { useState } from "react";
 
+const exampleQuestions = [
+  "How many casual leaves do employees get?",
+  "How many days can employees work from home?",
+  "What should employees use for sensitive systems?",
+  "What benefits are provided to employees?",
+];
+
 export default function Home() {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -35,6 +42,7 @@ export default function Home() {
       setAnswer(data.answer);
     } catch (error) {
       console.error(error);
+
       setAnswer(
         "Unable to connect to the RAG backend. Please make sure FastAPI is running."
       );
@@ -47,6 +55,7 @@ export default function Home() {
     <main className="min-h-screen bg-gray-100 px-6 py-12">
       <div className="mx-auto max-w-3xl">
         <div className="rounded-2xl bg-white p-8 shadow-lg">
+
           <h1 className="text-3xl font-bold text-gray-900">
             Enterprise Knowledge Assistant
           </h1>
@@ -64,10 +73,29 @@ export default function Home() {
             />
           </div>
 
+          {/* Example Questions */}
+          <div className="mt-5">
+            <p className="mb-3 text-sm font-semibold text-gray-700">
+              Try an example:
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {exampleQuestions.map((example) => (
+                <button
+                  key={example}
+                  onClick={() => setQuestion(example)}
+                  className="rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition hover:border-blue-500 hover:bg-blue-50"
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <button
             onClick={askQuestion}
             disabled={loading}
-            className="mt-4 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+            className="mt-6 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
           >
             {loading ? "Thinking..." : "Ask Question"}
           </button>
@@ -83,6 +111,7 @@ export default function Home() {
               </p>
             </div>
           )}
+
         </div>
       </div>
     </main>
