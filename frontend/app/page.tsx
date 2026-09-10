@@ -15,7 +15,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   async function askQuestion() {
-    if (!question.trim()) {
+    if (!question.trim() || loading) {
       return;
     }
 
@@ -48,6 +48,20 @@ export default function Home() {
       );
     } finally {
       setLoading(false);
+    }
+  }
+
+  function clearConversation() {
+    setQuestion("");
+    setAnswer("");
+  }
+
+  function handleKeyDown(
+    event: React.KeyboardEvent<HTMLTextAreaElement>
+  ) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      askQuestion();
     }
   }
 
@@ -96,16 +110,35 @@ export default function Home() {
           {/* Question Card */}
           <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
 
-            <label className="mb-3 block text-sm font-semibold text-slate-700">
-              Your question
-            </label>
+            <div className="mb-3 flex items-center justify-between">
+
+              <label className="block text-sm font-semibold text-slate-700">
+                Your question
+              </label>
+
+              {(question || answer) && (
+                <button
+                  onClick={clearConversation}
+                  disabled={loading}
+                  className="text-sm font-medium text-slate-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Clear
+                </button>
+              )}
+
+            </div>
 
             <textarea
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Ask something about company policies, benefits, security, or other documents..."
               className="h-36 w-full resize-none rounded-xl border border-slate-300 bg-slate-50 p-4 text-slate-900 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
+
+            <p className="mt-2 text-xs text-slate-400">
+              Press Enter to ask • Shift + Enter for a new line
+            </p>
 
             {/* Example Questions */}
             <div className="mt-6">
