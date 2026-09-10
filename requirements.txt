@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pydantic
+python-dotenv
+pypdf
+sentence-transformers
+faiss-cpu
+rank-bm25
+langchain
+langchain-core
+langchain-google-genai
+google-generativeai
+numpy

@@ -49,19 +49,39 @@ class QuestionResponse(BaseModel):
     sources: list[Source]
 
 
-print("Loading document and building RAG system...")
+print("Loading documents and building RAG system...")
 
 
 project_root = Path(__file__).resolve().parent.parent
-pdf_path = project_root / "documents" / "employee_handbook.pdf"
+documents_path = project_root / "documents"
+
+pdf_files = sorted(documents_path.glob("*.pdf"))
+
+if not pdf_files:
+    raise FileNotFoundError(
+        "No PDF documents were found in the documents folder."
+    )
 
 
-pages = extract_pdf_text(pdf_path)
+chunks = []
 
-chunks = chunk_pages(
-    pages,
-    source_name=pdf_path.name,
-)
+
+for pdf_path in pdf_files:
+    print(f"Loading document: {pdf_path.name}")
+
+    pages = extract_pdf_text(pdf_path)
+
+    document_chunks = chunk_pages(
+        pages,
+        source_name=pdf_path.name,
+    )
+
+    chunks.extend(document_chunks)
+
+
+print(f"Total documents loaded: {len(pdf_files)}")
+print(f"Total chunks created: {len(chunks)}")
+
 
 chunk_texts = [chunk["text"] for chunk in chunks]
 
