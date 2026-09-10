@@ -35,7 +35,7 @@ If the context does not contain enough information, say exactly:
 
 Keep the answer concise.
 
-Include the relevant document filename and page number.
+Do not include document filenames, page numbers, or source citations in the answer. Sources are provided separately by the application.
 
 Do not use outside knowledge or make up details.
 
